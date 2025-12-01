@@ -25,7 +25,7 @@ HMMC/
 │   ├── Supplemental Figure 2- Chipseq.ipynb
 │   └── call_compartments.ipynb
 ├── extra_notebooks/         # Additional analysis notebooks
-├── scripts/                 # Figure generation scripts (in development)
+├── scripts/                 # Additional utilities (for future development)
 ├── figures/                 # Output directory for generated figures
 ├── plots/                   # Pre-generated plots
 ├── annotations/             # Genomic annotations (BED, TSV files)
@@ -229,21 +229,32 @@ The analysis includes data from multiple cell lines:
    - Some functions have changed between versions
    - Check `badtools.py` for correct import statements for your version
 
+## Design Philosophy
+
+This codebase is designed to:
+
+1. **Provide HMM tools for Hi-C compartment analysis** - The core HMMC package contains reusable functions for running Hidden Markov Models on Hi-C data
+2. **Enable reproducible figure generation** - Notebooks demonstrate how to use the tools and generate paper figures
+3. **Maintain modular code** - Plotting and analysis functions are in separate modules (`plotting_tools.py`, `coolplots.py`, etc.) that notebooks can import and use
+4. **Support exploration** - Extra notebooks show additional analyses and data processing workflows
+
+The notebooks are the primary interface for generating figures - they import functionality from the Python modules and combine them to create publication-quality visualizations.
+
 ## Development Roadmap
 
 ### Current Status
 - ✅ All notebooks integrated and organized
 - ✅ Dependency management (requirements.txt)
 - ✅ Package structure (HMMC/)
+- ✅ Modular utility functions (badtools, coolplots, triangular, etc.)
 - ✅ Annotation files included
 
 ### Future Work
-- 🚧 Refactor notebook code into standalone scripts (`scripts/` directory)
-- 🚧 Create command-line interface for figure generation
-- 🚧 Add unit tests
+- 🚧 Add unit tests for core functions
 - 🚧 Optimize memory usage for large datasets
-- 🚧 Add comprehensive documentation
+- 🚧 Add comprehensive API documentation
 - 🚧 Create example data subset for quick testing
+- 🚧 Add command-line tools for common workflows
 
 ## Contributing
 
