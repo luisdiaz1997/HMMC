@@ -1,0 +1,25 @@
+name: GM12878_chr19
+seed: 67
+dataset: GM12878_hg38_25kb
+output_dir: outputs
+
+preprocessing:
+  mcool_path: mcools/4DNFIXP4QG5B.mcool
+  resolution: 25000
+  fasta_path: /gladstone/engelhardt/lab/lchumpitaz/hi-c/hg38.fa
+  chromosomes: ['chr19']
+  n_eigs: 3
+  clip_percentile: 99
+  ignore_diags: 2
+
+segmentation:
+  state_list: [binary, HMM2, HMM3, HMM3P, HMM4, HMM5]
+  constrain_transmat: false
+  bed_states: [HMM3P]
+
+figures:
+  annotation_type: HMM3P
+  regions:
+    - 'chr19:31,000,000-35,000,000'
+    - 'chr19:7,000,000-20,000,000'
+  figure_width: 5

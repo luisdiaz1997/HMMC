@@ -3,3 +3,8 @@ __pycache__
 visualc
 visualc/
 HMMC.egg-info/
+build/
+figs/
+mcools
+outputs/
+.zcode/
