@@ -42,7 +42,8 @@ cmap = np.array(list([ np.array(hex_to_rgb(colordict[key]))/255 for key in color
 
 def track_to_bed(hmm_track, annotation_type):
     
-    annotation_track = hmm_track.copy()[annotation_type].values.reshape(-1)    
+    # to_numpy(copy=True): pandas >=3 returns read-only views from .values
+    annotation_track = hmm_track[annotation_type].to_numpy(copy=True).reshape(-1)
     annotation_track[np.isnan(annotation_track)] = nan_color
     annotation_track = annotation_track.astype(int)
     names_track = np.array(names[annotation_type])[annotation_track]
@@ -74,7 +75,7 @@ def track_to_mat(hmm_track, region, annotation_type, pallete, heatmap_width = 5,
 
 
 def cmap_from_bed(bed_df, rgb = True):
-    unique_colors = bed_df.rgb.unique().reshape(-1)
+    unique_colors = np.asarray(bed_df['rgb'].unique(), dtype=object).reshape(-1)
     if rgb:
         unique_colors= pd.Series(unique_colors, dtype=str)
         cmap = np.array([color for color in unique_colors.str.split(',').values], dtype='float')/255
@@ -85,12 +86,12 @@ def cmap_from_bed(bed_df, rgb = True):
     
 
 def bed_to_mat(bed_df, region, heatmap_width = 5, horizontal=True):
-    
-    unique_states = bed_df.name.unique().reshape(-1)
+
+    unique_states = np.asarray(bed_df['name'].unique(), dtype=object).reshape(-1)
     enc = OrdinalEncoder(categories=[unique_states])
     enc.fit(unique_states.reshape(-1, 1))
- 
-    y_sig = bf.select(bed_df, region).name.values.reshape(-1,1)
+
+    y_sig = np.asarray(bf.select(bed_df, region)['name'].values, dtype=object).reshape(-1,1)
     
     
     mat = np.tile(enc.transform(y_sig), (1, heatmap_width))
@@ -100,7 +101,7 @@ def bed_to_mat(bed_df, region, heatmap_width = 5, horizontal=True):
         
     return mat
 
-def plot_track(hmm_track, region, annotation_type, pallete):
+def plot_track(hmm_track, region, annotation_type, pallete, figure_width=5):
     plt.figure(figsize=(figure_width, figure_width/10))
     mat_c = track_to_mat(hmm_track, region, annotation_type, pallete, horizontal=True)
     im = plt.imshow(mat_c,cmap=matplotlib.colors.ListedColormap(cmap), vmin=0, vmax=5, aspect='auto')
@@ -121,7 +122,7 @@ def plot_bedtrack(bed_track, region, figure_width=10, rgb=True):
     im = plt.imshow(mat,cmap=matplotlib.colors.ListedColormap(cmap), vmin=0, vmax=len(cmap), aspect='auto')
     
     # handling the legend
-    names = bed_track.name.unique().reshape(-1)
+    names = np.asarray(bed_track['name'].unique(), dtype=object).reshape(-1)
     order = np.argsort(names)
     names = list(names[order])
     colors = [im.cmap(im.norm(i)) for i in order]
@@ -130,6 +131,7 @@ def plot_bedtrack(bed_track, region, figure_width=10, rgb=True):
     plt.axis('off');
 
 def names_to_nums(name_sig):
+    name_sig = np.asarray(name_sig, dtype=object)
     mask = name_sig=='N'
     name_sig = OrdinalEncoder().fit_transform(name_sig.reshape(-1, 1)).reshape(-1)
     name_sig[mask]=np.nan

@@ -15,7 +15,7 @@ def _make_transmat(n_states, constrained=False):
     transmat = np.ones((n_states, n_states)) / 100#n_states
     np.fill_diagonal(transmat, (1 - 1 / (n_states+1)))
 
-    if n_states is 4 and constrained is True:
+    if n_states == 4 and constrained is True:
         small = 0
         # dis-allow transitions between B and B-in-A
         transmat[0, 2] = small
@@ -26,7 +26,7 @@ def _make_transmat(n_states, constrained=False):
         # dis-allow transitions between A and A-in-B
         transmat[3, 1] = small
 
-    if n_states is 5 and constrained is True:
+    if n_states == 5 and constrained is True:
         small = 0
         transmat[0, 3:] = small
         transmat[1, 2:] = small
@@ -35,7 +35,7 @@ def _make_transmat(n_states, constrained=False):
         transmat[3, :3] = small
         transmat[4, :2] = small
 
-    if n_states is 6 and constrained is True:
+    if n_states == 6 and constrained is True:
         small = 0
         transmat[0, 3:5] = small
         transmat[1, 2:] = small
@@ -206,7 +206,7 @@ def get_segmentation(eig_df,
         if verbose is True: 
             print('generating segmentation for '+state)
         try: 
-            if state is 'binary':
+            if state == 'binary':
                 seg = (seg_df.E1.copy())
                 seg[mask] = np.where(seg[mask] > 0, 1, 0)      
             elif '3P' in state:
